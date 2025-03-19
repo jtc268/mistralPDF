@@ -18,9 +18,30 @@ class SimplePDFToMarkdownApp:
         self.root.geometry("800x600")
         self.root.minsize(600, 400)
         
+        # Load saved API key if it exists
+        self.api_key = self.load_api_key()
+        
         self.setup_ui()
         
     def setup_ui(self):
+        # API key frame
+        api_frame = tk.Frame(self.root, pady=10)
+        api_frame.pack(fill="x")
+        
+        api_label = tk.Label(api_frame, text="Mistral API Key:", anchor="w")
+        api_label.pack(side="left", padx=10)
+        
+        self.api_entry = tk.Entry(api_frame, width=40, show="•")
+        self.api_entry.pack(side="left", padx=5)
+        if self.api_key:
+            self.api_entry.insert(0, self.api_key)
+        
+        self.save_api_button = tk.Button(api_frame, text="Save API Key", command=self.save_api_key)
+        self.save_api_button.pack(side="left", padx=5)
+        
+        self.api_saved_label = tk.Label(api_frame, text="", fg="green", font=("Helvetica", 10))
+        self.api_saved_label.pack(side="left", padx=5)
+        
         # File selection frame
         file_frame = tk.Frame(self.root, pady=10)
         file_frame.pack(fill="x")
@@ -140,12 +161,67 @@ class SimplePDFToMarkdownApp:
         self.conversion_thread.daemon = True
         self.conversion_thread.start()
     
+    def save_api_key(self):
+        """Save the API key to a local file."""
+        api_key = self.api_entry.get().strip()
+        if not api_key:
+            messagebox.showerror("Error", "Please enter an API key")
+            return
+            
+        try:
+            config_dir = os.path.expanduser("~/.mistral_pdf")
+            os.makedirs(config_dir, exist_ok=True)
+            config_file = os.path.join(config_dir, "config.json")
+            
+            with open(config_file, "w") as f:
+                json.dump({"api_key": api_key}, f)
+            
+            self.api_key = api_key
+            
+            # Visual feedback sequence
+            self.save_api_button.config(state=tk.DISABLED)  # Disable button
+            self.api_entry.config(state=tk.DISABLED)  # Disable input
+            self.api_saved_label.config(text="Saved!")  # Show saved message
+            
+            # After 1.5 seconds, re-enable everything
+            self.root.after(1500, self._reset_api_ui)
+            
+            self.status_var.set("API key saved successfully!")
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to save API key: {str(e)}")
+    
+    def _reset_api_ui(self):
+        """Reset the API key UI elements after save animation."""
+        self.api_entry.config(show="•", state=tk.NORMAL)
+        self.save_api_button.config(state=tk.NORMAL)
+        self.api_saved_label.config(text="")
+    
+    def load_api_key(self):
+        """Load the API key from the local file."""
+        try:
+            config_file = os.path.expanduser("~/.mistral_pdf/config.json")
+            if os.path.exists(config_file):
+                with open(config_file) as f:
+                    config = json.load(f)
+                    return config.get("api_key", "")
+        except Exception:
+            pass
+        return ""
+    
+    def get_current_api_key(self):
+        """Get the current API key from the entry field."""
+        return self.api_entry.get().strip() or self.api_key
+
     def upload_pdf_file(self, file_path):
         """Upload a PDF file to Mistral's files API."""
         self.update_progress("Uploading PDF file...")
         
+        api_key = self.get_current_api_key()
+        if not api_key:
+            raise Exception("Please enter your Mistral API key")
+        
         headers = {
-            "Authorization": f"Bearer {API_KEY}"
+            "Authorization": f"Bearer {api_key}"
         }
         
         # Create a multipart form-data request
@@ -163,7 +239,9 @@ class SimplePDFToMarkdownApp:
             )
             
             if response.status_code != 200:
-                raise Exception(f"File upload error: {response.status_code} - {response.text}")
+                if response.status_code == 401:
+                    raise Exception("Invalid API key")
+                raise Exception(f"Upload failed. Please try again.")
             
             return response.json()
     
@@ -171,8 +249,9 @@ class SimplePDFToMarkdownApp:
         """Get a signed URL for an uploaded file."""
         self.update_progress("Getting file access URL...")
         
+        api_key = self.get_current_api_key()
         headers = {
-            "Authorization": f"Bearer {API_KEY}",
+            "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json"
         }
         
@@ -215,6 +294,10 @@ class SimplePDFToMarkdownApp:
     
     def _process_conversion(self):
         try:
+            # Check for API key first
+            if not self.get_current_api_key():
+                raise Exception("Please enter your Mistral API key")
+                
             # Process the PDF document by using Mistral's file upload + OCR flow
             self.update_progress("Preparing PDF file...")
             
@@ -238,7 +321,7 @@ class SimplePDFToMarkdownApp:
                 self.update_progress("Processing PDF with OCR (this may take a while)...")
                 
                 headers = {
-                    "Authorization": f"Bearer {API_KEY}",
+                    "Authorization": f"Bearer {self.get_current_api_key()}",
                     "Content-Type": "application/json"
                 }
                 
@@ -289,7 +372,7 @@ class SimplePDFToMarkdownApp:
                     ocr_api_url = "https://api.mistral.ai/v1/ocr"
                     
                     multipart_headers = {
-                        "Authorization": f"Bearer {API_KEY}"
+                        "Authorization": f"Bearer {self.get_current_api_key()}"
                     }
                     
                     multipart_data = {
@@ -336,9 +419,40 @@ class SimplePDFToMarkdownApp:
         self.root.after(1500, self.hide_progress_ui)
     
     def _handle_conversion_error(self, error_message):
-        messagebox.showerror("Error", f"Conversion failed: {error_message}")
-        self.status_var.set("Error occurred during conversion")
+        # Simplify common error messages
+        simplified_error = self._simplify_error_message(error_message)
+        messagebox.showerror("Error", simplified_error)
+        self.status_var.set("Conversion failed")
         self.hide_progress_ui()
+    
+    def _simplify_error_message(self, error):
+        """Convert technical errors into user-friendly messages."""
+        error = str(error).lower()
+        
+        # API key related errors
+        if "unauthorized" in error or "invalid token" in error or "authentication" in error:
+            return "Invalid API key. Please check your Mistral API key and try again."
+            
+        # File related errors
+        if "file too large" in error:
+            return "PDF file is too large. Please try a smaller file (under 5MB)."
+            
+        if "file format" in error or "not supported" in error:
+            return "Invalid file format. Please ensure you're uploading a valid PDF."
+            
+        # API response errors
+        if "no markdown content" in error:
+            return "Could not extract content from the PDF. Please try a different file."
+            
+        if "ocr api error" in error:
+            return "OCR processing failed. Please try again or use a different PDF."
+            
+        # Network errors
+        if "connection" in error or "timeout" in error:
+            return "Network error. Please check your internet connection."
+            
+        # Default case - keep it brief
+        return "Conversion failed. Please try again with a different PDF."
     
     def _handle_conversion_cancelled(self):
         self.status_var.set("Conversion cancelled")
