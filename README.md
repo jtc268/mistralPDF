@@ -1,8 +1,6 @@
-# 🚀 Simple PDF-to-Text Converter
+# 🚀 Mistral OCR PDF-to-Text/Markdown Converter
 
-Uses latest, cutting-edge technology for accuracy.
-
-Convert any PDF to high-quality Text in seconds using Mistral's state-of-the-art OCR technology. This lightweight app provides the most advanced and affordable OCR solution on the market, powered by [Mistral OCR](https://mistral.ai/news/mistral-ocr).
+Convert any PDF to high-quality Text or Markdown in seconds using Mistral's state-of-the-art OCR technology. This lightweight app provides the most advanced and affordable OCR solution on the market, powered by [Mistral OCR](https://mistral.ai/news/mistral-ocr).
 
 ![Mistral OCR Benchmarks](https://mistral.ai/images/ocr/ocr-benchmark-chart.png)
 
@@ -13,11 +11,12 @@ Convert any PDF to high-quality Text in seconds using Mistral's state-of-the-art
 - **Multilingual Support**: Process documents in any language with exceptional accuracy
 - **Easy-to-Use Interface**: Both GUI and CLI options available
 - **Clipboard Integration**: Copy markdown with one click
-- **Free to Use**: Just add your Mistral API key
+- **Secure API Key Management**: Save your API key securely through the UI
 
 ## 🔧 Quick Start
 
-1. **Get a Mistral API key** - Create a free experimental API key at [Mistral AI Platform](https://console.mistral.ai/)
+1. **Get a Mistral API key**
+   - Create a free experimental API key at [Mistral AI Platform](https://console.mistral.ai/)
 
 2. **Install dependencies**:
    ```bash
@@ -25,12 +24,20 @@ Convert any PDF to high-quality Text in seconds using Mistral's state-of-the-art
    ```
 
 3. **Run the application**:
-   - GUI version: `python simple_pdf_to_md.py`
-   - CLI version: `python pdf_to_md_cli.py input.pdf [output.md]`
+   ```bash
+   python simple_pdf_to_md.py
+   ```
 
-4. **Replace the API key**:
-   - Open `simple_pdf_to_md.py` or `pdf_to_md_cli.py`
-   - Replace `API_KEY = "YOUR_MISTRAL_API_KEY"` with your own key from https://console.mistral.ai/
+4. **Enter your API key**:
+   - When the app launches, you'll see an API key field at the top
+   - Enter your Mistral API key
+   - Click "Save API Key" to securely store it
+   - The key will be remembered for future sessions
+
+For CLI users:
+   ```bash
+   python pdf_to_md_cli.py input.pdf [output.md]
+   ```
 
 ## 📊 Why Mistral OCR?
 
@@ -61,11 +68,12 @@ The application:
 
 ## 🔒 Security
 
-- Your documents remain private
-- Processing happens via Mistral's secure API
+- Your API key is stored securely in `~/.mistral_pdf/config.json`
+- Keys are masked in the UI for privacy
 - No data is stored permanently
+- Processing happens via Mistral's secure API
 
-## 📚 Contributing
+## �� Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
