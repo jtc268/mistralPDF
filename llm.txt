@@ -1,0 +1,45 @@
+REPOSITORY_NAME: mistral-ocr-pdf-to-text-markdown
+REPOSITORY_DESCRIPTION: High-quality PDF to Text/Markdown converter using Mistral AI's state-of-the-art OCR technology
+REPOSITORY_PURPOSE: Convert PDF documents to accurately formatted Text or Markdown while preserving tables, equations, and multilingual content
+
+MAIN_COMPONENTS:
+- simple_pdf_to_md.py: GUI application for PDF to Markdown conversion
+- pdf_to_md_cli.py: Command-line interface for PDF to Markdown conversion
+- requirements.txt: Required dependencies (requests, tk)
+- README.md: Repository documentation and usage instructions
+
+SETUP_INSTRUCTIONS:
+1. Install dependencies: pip install requests tk
+2. Set Mistral API key: Replace API_KEY in simple_pdf_to_md.py or pdf_to_md_cli.py with your own key from https://console.mistral.ai/
+3. Run application: python simple_pdf_to_md.py OR python pdf_to_md_cli.py input.pdf [output.md]
+
+API_USAGE:
+- The app uses Mistral OCR API (mistral-ocr-latest model)
+- API key must be obtained from Mistral AI (free experimental tier available)
+- API communication happens via standard HTTPS requests
+- API endpoints used: /v1/files, /v1/files/{id}/url, /v1/ocr
+
+FEATURES:
+- PDF to Markdown conversion with high accuracy (94.89%)
+- Support for complex document elements (tables, math, multilingual)
+- Both GUI and CLI interfaces
+- Progress visualization during processing
+- Clipboard integration for easy copying
+- File saving capabilities
+
+USE_CASES:
+- Converting academic papers to markdown
+- Extracting text from scanned documents
+- Preparing documents for RAG systems
+- Digitizing print materials
+- Processing multilingual content
+
+LIMITATIONS:
+- Requires internet connection
+- API rate limits may apply based on Mistral's policies
+- Some complex formatting might not perfectly transfer
+
+VERSION: 1.0.0
+LICENSE: MIT
+MAINTAINER: Repository owner
+CONTACT: GitHub Issues 
