@@ -1,4 +1,4 @@
-# 🚀 Advanced PDF-to-Text Converter
+# 🚀 Simple PDF-to-Text Converter
 
 Convert any PDF to high-quality Text in seconds using Mistral's state-of-the-art OCR technology. This lightweight app provides the most advanced and affordable OCR solution on the market, powered by [Mistral OCR](https://mistral.ai/news/mistral-ocr).
 
