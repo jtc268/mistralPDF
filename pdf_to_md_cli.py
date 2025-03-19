@@ -13,7 +13,7 @@ import requests
 import time
 
 # Set your Mistral API key here
-MISTRAL_API_KEY = "Q2YZJHS8slWMZUdGk1hIZAog6scOjEEU"
+MISTRAL_API_KEY = "YOUR_MISTRAL_API_KEY"  # Get your key from https://console.mistral.ai/
 
 def print_progress(message):
     """Print progress message with timestamp."""

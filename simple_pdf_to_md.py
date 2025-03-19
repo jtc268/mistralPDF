@@ -9,7 +9,7 @@ import requests
 import mimetypes
 
 # Set the API key - replace with your own key
-API_KEY = "Q2YZJHS8slWMZUdGk1hIZAog6scOjEEU"
+API_KEY = "YOUR_MISTRAL_API_KEY"  # Get your key from https://console.mistral.ai/
 
 class SimplePDFToMarkdownApp:
     def __init__(self, root):

@@ -30,7 +30,7 @@ Convert any PDF to high-quality Text in seconds using Mistral's state-of-the-art
 
 4. **Replace the API key**:
    - Open `simple_pdf_to_md.py` or `pdf_to_md_cli.py`
-   - Replace `API_KEY = "Q2YZJHS8slWMZUdGk1hIZAog6scOjEEU"` with your own key
+   - Replace `API_KEY = "YOUR_MISTRAL_API_KEY"` with your own key from https://console.mistral.ai/
 
 ## 📊 Why Mistral OCR?
 
