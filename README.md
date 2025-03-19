@@ -1,6 +1,8 @@
-# 🚀 Mistral OCR PDF-to-Text/Markdown Converter
+# 🚀 Simple PDF-to-Text Converter
 
-Convert any PDF to high-quality Text or Markdown in seconds using Mistral's state-of-the-art OCR technology. This lightweight app provides the most advanced and affordable OCR solution on the market, powered by [Mistral OCR](https://mistral.ai/news/mistral-ocr).
+Uses latest, cutting-edge technology for accuracy.
+
+Convert any PDF to high-quality Text in seconds using Mistral's state-of-the-art OCR technology. This lightweight app provides the most advanced and affordable OCR solution on the market, powered by [Mistral OCR](https://mistral.ai/news/mistral-ocr).
 
 ![Mistral OCR Benchmarks](https://mistral.ai/images/ocr/ocr-benchmark-chart.png)
 
@@ -73,7 +75,7 @@ The application:
 - No data is stored permanently
 - Processing happens via Mistral's secure API
 
-## �� Contributing
+## 📚 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
