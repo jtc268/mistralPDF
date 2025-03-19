@@ -40,7 +40,6 @@ For CLI users:
    ```bash
    python pdf_to_md_cli.py input.pdf [output.md]
    ```
-   Note: For CLI usage, you'll need to enter your API key in the GUI app first.
 
 ## 📊 Why Mistral OCR?
 
